@@ -1,0 +1,139 @@
+# Wiki Schema
+
+> Defines the structure, conventions, and tag taxonomy for this wiki.
+> The agent reads this before every operation. Edits to this file
+> retroactively constrain future ingests, queries, and lint runs.
+
+## Domain
+
+[REPLACE: One sentence describing what this wiki covers.
+Examples:
+- "AI/ML research, models, and the people and labs producing them."
+- "Personal health: labs, supplements, sleep, training protocols."
+- "Competitor and market intelligence for the consumer fintech space."]
+
+## Conventions
+
+- **Filenames:** kebab-case, e.g. `transformer-architecture.md`, `andrej-karpathy.md`.
+- **Wikilinks:** prefer `[[page-slug]]` over markdown links for internal references.
+- **Wikilink pipes:** never escape `|` inside `[[…]]`. Use `[[slug|alias]]`, not `[[slug\|alias]]` — even inside markdown tables. The lint scanner captures the slash as part of the slug and the link silently breaks.
+- **Dates:** ISO format `YYYY-MM-DD` everywhere.
+- **Frontmatter:** required on every wiki page (see below).
+- **Cross-references:** every page must link to at least 2 other pages.
+- **Provenance:** on pages synthesizing 3+ sources, append `^[raw/articles/source.md]`
+  at the end of paragraphs whose claims come from a specific source. Optional on
+  single-source pages where the `sources:` frontmatter is sufficient.
+
+## Frontmatter (required on all Layer 2 pages)
+
+```yaml
+---
+title: Page Title
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+type: entity | concept | comparison | query | summary
+tags: [from-taxonomy-only]
+sources: [raw/articles/source-name.md]
+# Optional quality signals:
+confidence: high | medium | low        # how well-supported the claims are
+contested: true                        # set when there are unresolved contradictions
+contradictions: [other-page-slug]      # pages this one conflicts with
+---
+```
+
+`confidence` and `contested` are recommended for opinion-heavy or fast-moving
+topics. The lint script surfaces `contested: true` and `confidence: low` pages
+for review so weak claims don't silently harden into accepted wiki fact.
+
+`sources:` must list every `raw/` file whose content informed the page. On
+pages that synthesize across multiple raw articles (cross-cut entities,
+multi-source concepts and comparisons), list all of them — not just the
+primary one. The lint script flags missing or empty `sources:`.
+
+## Frontmatter for raw/ sources
+
+```yaml
+---
+source_url: https://example.com/article   # original URL, if applicable
+ingested: YYYY-MM-DD
+sha256: <hex digest of body, computed below the closing --->
+---
+```
+
+Compute `sha256` with the bundled helper — it matches `lint.py`'s drift
+check exactly:
+
+```bash
+python3 "$HOME/.claude/skills/wikify/scripts/compute_body_sha256.py" raw/articles/source-name.md
+```
+
+The helper hashes everything after the closing `---\n` of the frontmatter
+block (UTF-8 bytes, including any trailing newline at EOF). On re-ingest
+of the same URL, recompute and compare; skip if identical, flag drift if
+different.
+
+## Tag Taxonomy
+
+[REPLACE: 10–20 tags grouped into 3–5 categories tailored to the domain.
+Every tag used on a page MUST appear here. To add a new tag, add it here
+FIRST, then use it. This prevents tag sprawl.]
+
+Example for an AI/ML wiki:
+
+- **Models & Architecture:** model, architecture, benchmark, training, scaling
+- **People & Orgs:** person, company, lab, open-source
+- **Techniques:** optimization, fine-tuning, inference, alignment, data, evaluation
+- **Meta:** comparison, timeline, controversy, prediction, retrospective
+
+## Page Thresholds
+
+- **Create a page** when an entity/concept appears in 2+ sources OR is central
+  to one source.
+- **Add to existing page** when a source mentions something already covered.
+- **Don't create a page** for passing mentions, minor details, or things
+  outside the domain.
+- **Split a page** when it exceeds ~200 lines — break into sub-topics with
+  cross-links.
+- **Archive a page** when fully superseded — move to `_archive/`, remove from
+  index, replace inbound wikilinks with plain text + " (archived)".
+
+## Page types
+
+### Entity pages (`entities/`)
+One page per notable entity (person, org, product, model). Include:
+- Overview / what it is
+- Key facts and dates
+- Relationships to other entities (`[[wikilinks]]`)
+- Source references
+
+### Concept pages (`concepts/`)
+One page per concept or topic. Include:
+- Definition / explanation
+- Current state of knowledge
+- Open questions or debates
+- Related concepts (`[[wikilinks]]`)
+
+### Comparison pages (`comparisons/`)
+Side-by-side analyses. Include:
+- What is being compared and why
+- Dimensions of comparison (table format preferred)
+- Verdict or synthesis
+- Sources
+
+### Query pages (`queries/`)
+Filed answers to substantial questions worth not re-deriving. Include:
+- The question
+- The answer with `[[wikilinks]]` to source pages
+- Date asked
+
+## Update Policy
+
+When new information conflicts with existing content:
+
+1. Check the dates — newer sources generally supersede older ones.
+2. If genuinely contradictory, note both positions with dates and sources.
+3. Mark the contradiction in frontmatter: `contested: true` and
+   `contradictions: [other-page-slug]`.
+4. Flag for user review in the next lint report.
+
+Never silently overwrite contradicting claims.

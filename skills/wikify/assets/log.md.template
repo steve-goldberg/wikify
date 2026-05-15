@@ -1,0 +1,11 @@
+# Wiki Log
+
+> Chronological record of all wiki actions. Append-only.
+> Format: `## [YYYY-MM-DD] action | subject`
+> Actions: ingest, update, query, lint, create, archive, delete
+> When this file exceeds 500 entries, rotate: rename to log-YYYY.md, start fresh.
+
+## [YYYY-MM-DD] create | Wiki initialized
+- Domain: [REPLACE with the domain set in SCHEMA.md]
+- Structure created with SCHEMA.md, index.md, log.md
+- Tag taxonomy seeded in SCHEMA.md

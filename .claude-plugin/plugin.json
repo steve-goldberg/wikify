@@ -1,0 +1,20 @@
+{
+  "name": "wikify",
+  "version": "0.1.0",
+  "description": "Build, maintain, and query a persistent compounding markdown knowledge base in the spirit of Karpathy's LLM Wiki.",
+  "author": {
+    "name": "Steve Goldberg"
+  },
+  "homepage": "https://github.com/steve-goldberg/wikify",
+  "repository": "https://github.com/steve-goldberg/wikify",
+  "keywords": [
+    "wiki",
+    "knowledge-base",
+    "second-brain",
+    "obsidian",
+    "markdown",
+    "rag",
+    "karpathy"
+  ],
+  "license": "MIT"
+}

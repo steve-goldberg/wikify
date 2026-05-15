@@ -1,0 +1,24 @@
+# Wiki Index
+
+> Content catalog. Every wiki page listed under its type with a one-line summary.
+> Read this first to find relevant pages for any query.
+>
+> Last updated: YYYY-MM-DD | Total pages: 0
+
+## Entities
+<!-- Notable people, organizations, products, models. Alphabetical. -->
+
+## Concepts
+<!-- Topics, ideas, techniques. Alphabetical. -->
+
+## Comparisons
+<!-- Side-by-side analyses. Alphabetical. -->
+
+## Queries
+<!-- Filed answers to substantial questions. Most recent first. -->
+
+<!--
+Scaling rule: when any section exceeds 50 entries, split into sub-sections by
+first letter or sub-domain. When the index exceeds 200 entries total, create
+_meta/topic-map.md grouping pages by theme for faster navigation.
+-->
