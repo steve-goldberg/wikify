@@ -1,0 +1,13 @@
+{
+  "name": "wikify",
+  "owner": {
+    "name": "Steve Goldberg"
+  },
+  "plugins": [
+    {
+      "name": "wikify",
+      "source": ".",
+      "description": "Build, maintain, and query a persistent compounding markdown knowledge base in the spirit of Karpathy's LLM Wiki."
+    }
+  ]
+}
