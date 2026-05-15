@@ -6,7 +6,10 @@
   "plugins": [
     {
       "name": "wikify",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "steve-goldberg/wikify"
+      },
       "description": "Build, maintain, and query a persistent compounding markdown knowledge base in the spirit of Karpathy's LLM Wiki."
     }
   ]
