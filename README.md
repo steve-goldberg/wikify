@@ -13,11 +13,14 @@ Unlike RAG (which rediscovers knowledge from scratch every query), wikify compil
 
 ## Install
 
+In Claude Code, register this repo as a marketplace, then install the plugin:
+
 ```
-/plugin install https://github.com/steve-goldberg/wikify
+/plugin marketplace add steve-goldberg/wikify
+/plugin install wikify@wikify
 ```
 
-Or from a local checkout, point Claude Code at the directory with `--plugin-dir`.
+Run `/reload-plugins` if the skill doesn't show up immediately.
 
 ## Usage
 
